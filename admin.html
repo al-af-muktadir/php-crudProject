@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <section class="bg-[#FFFAF1]">
+        <!-- Navbar -->
+        <div class="navbar bg-sky-300 mb-12 shadow-lg">
+            <div class="flex-1">
+                <a class="btn btn-ghost text-xl text-gray-800 font-bold">Doctors Asylum</a>
+            </div>
+            <div class="flex-none">
+                <!-- Add any other elements here (user profile, etc.) -->
+            </div>
+        </div>
+
+        <!-- Admin Panel Header -->
+        <div class="text-7xl font-extrabold text-center text-gray-800 mb-16">
+            ADMIN PANEL
+        </div>
+
+        <!-- Card Section -->
+        <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-12 px-8">
+            <!-- Manage Patient History Card -->
+            <div class="card w-full max-w-xs bg-gradient-to-r from-cyan-500 to-blue-500 shadow-xl transition-transform transform hover:scale-105">
+                <figure>
+                    <img class="h-[290px] w-full object-cover rounded-t-lg" src="patient.jpg" alt="Patient History" />
+                </figure>
+                <div class="card-body bg-white text-gray-800 rounded-b-lg hover:shadow-lg transition-shadow">
+                    <h2 class="card-title text-2xl font-semibold">Manage Patients History</h2>
+                    <p class="text-lg">Handle all patient histories efficiently and safely.</p>
+                    <div class="card-actions justify-end">
+                        <button onclick="location.href='viewPatientTable.php'" class="btn btn-primary hover:bg-blue-600 transition-colors">Visit Panel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Doctors Card -->
+            <div class="card w-full max-w-xs bg-gradient-to-r from-purple-500 to-indigo-500 shadow-xl transition-transform transform hover:scale-105">
+                <figure>
+                    <img class="h-[290px] w-full object-cover rounded-t-lg" src="doctors.avif" alt="Doctors" />
+                </figure>
+                <div class="card-body bg-white text-gray-800 rounded-b-lg hover:shadow-lg transition-shadow">
+                    <h2 class="card-title text-2xl font-semibold">Manage Doctors</h2>
+                    <div class="card-actions justify-end">
+                        <button onclick="location.href='viewDoctorsTable.php'" class="btn btn-primary hover:bg-indigo-600 transition-colors">Visit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Appointments Card -->
+            <div class="card w-full max-w-xs bg-gradient-to-r from-orange-500 to-yellow-500 shadow-xl transition-transform transform hover:scale-105">
+                <figure>
+                    <img class="h-[290px] w-full object-cover rounded-t-lg" src="appoinment.jpg" alt="Appointments" />
+                </figure>
+                <div class="card-body bg-white text-gray-800 rounded-b-lg hover:shadow-lg transition-shadow">
+                    <h2 class="card-title text-2xl font-semibold">Manage Appointments</h2>
+                    <div class="card-actions justify-end">
+                        <button onclick="location.href='viewAppointmentTable.php'" class="btn btn-primary hover:bg-yellow-600 transition-colors">Visit</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Card -->
+            <div class="card w-full max-w-xs bg-gradient-to-r from-green-500 to-teal-500 shadow-xl transition-transform transform hover:scale-105">
+                <figure>
+                    <img class="h-[290px] w-full object-cover rounded-t-lg" src="serve.jpeg" alt="Services" />
+                </figure>
+                <div class="card-body bg-white text-gray-800 rounded-b-lg hover:shadow-lg transition-shadow">
+                    <h2 class="card-title text-2xl font-semibold">Services</h2>
+                    <div class="card-actions justify-end">
+                        <a href="viewStaffTable.php"><button class="btn btn-primary hover:bg-teal-600 transition-colors">Visit</button></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Medicines Card -->
+            <div class="card w-full max-w-xs bg-gradient-to-r from-pink-500 to-red-500 shadow-xl transition-transform transform hover:scale-105">
+                <figure>
+                    <img class="h-[290px] w-full object-cover rounded-t-lg" src="pharma.avif" alt="Medicines" />
+                </figure>
+                <div class="card-body bg-white text-gray-800 rounded-b-lg hover:shadow-lg transition-shadow">
+                    <h2 class="card-title text-2xl font-semibold">Manage Medicines</h2>
+                    <div class="card-actions justify-end">
+                        <button class="btn btn-primary hover:bg-red-600 transition-colors">Manage</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card w-full max-w-xs bg-gradient-to-r from-pink-500 to-red-500 shadow-xl transition-transform transform hover:scale-105">
+              <figure>
+                  <img class="h-[290px] w-full object-cover rounded-t-lg" src="pharma.avif" alt="Medicines" />
+              </figure>
+              <div class="card-body bg-white text-gray-800 rounded-b-lg hover:shadow-lg transition-shadow">
+                  <h2 class="card-title text-2xl font-semibold">Manage Hospitals</h2>
+                  <div class="card-actions justify-end">
+                      <a href="viewHospitalTable.php"><button class="btn btn-primary hover:bg-red-600 transition-colors">Manage</button></a>
+                  </div>
+              </div>
+          </div>
+        </div>
+    </section>
+</body>
+</html>
