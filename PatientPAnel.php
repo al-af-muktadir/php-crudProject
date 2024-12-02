@@ -21,7 +21,6 @@ $patient = $patient_result->fetch_assoc();
 // Fetch appointments for the logged-in patient
 $appointments_query = "SELECT 
                             a.appointment_date, 
-                         
                             d.name AS doctor_name, 
                             h.name AS hospital_name, 
                             dp.name AS department_name 
@@ -34,6 +33,21 @@ $appointments_stmt = $conn->prepare($appointments_query);
 $appointments_stmt->bind_param("i", $patient_id);
 $appointments_stmt->execute();
 $appointments_result = $appointments_stmt->get_result();
+
+// Fetch booked ambulances for the logged-in patient
+$ambulance_query = "SELECT 
+                        b.booking_time, 
+                        b.pickup_location, 
+                        b.dropoff_location, 
+                        a.vehicle_number, 
+                        a.type 
+                    FROM bookambulance b
+                    JOIN ambulances a ON b.ambulance_id = a.ambulance_id
+                    WHERE b.patient_id = ?";
+$ambulance_stmt = $conn->prepare($ambulance_query);
+$ambulance_stmt->bind_param("i", $patient_id);
+$ambulance_stmt->execute();
+$ambulance_result = $ambulance_stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -90,6 +104,7 @@ $appointments_result = $appointments_stmt->get_result();
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
         table th, table td {
@@ -108,6 +123,8 @@ $appointments_result = $appointments_stmt->get_result();
     <nav class="navbar">
         <a href="home.php" class="logo">Doctors Asylum</a>
         <div class="navbar-links">
+            <a href="PatientLogin.php">Logout</a>
+            <a href="ambulance.php" class="nav-link">Book Ambulance</a>
             <a href="bookingForm.php" class="nav-link">Book Appointment</a>
         </div>
     </nav>
@@ -129,6 +146,7 @@ $appointments_result = $appointments_stmt->get_result();
 
         <!-- Main Section -->
         <div class="main-section" id="main-section">
+            <!-- Appointments Section -->
             <h2>Appointments</h2>
             <?php if ($appointments_result->num_rows > 0): ?>
                 <table>
@@ -138,7 +156,6 @@ $appointments_result = $appointments_stmt->get_result();
                             <th>Hospital Name</th>
                             <th>Department</th>
                             <th>Appointment Date</th>
-                         
                         </tr>
                     </thead>
                     <tbody>
@@ -148,13 +165,41 @@ $appointments_result = $appointments_stmt->get_result();
                                 <td><?php echo $appointment['hospital_name']; ?></td>
                                 <td><?php echo $appointment['department_name']; ?></td>
                                 <td><?php echo $appointment['appointment_date']; ?></td>
-                                
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
             <?php else: ?>
                 <p>No appointments booked yet.</p>
+            <?php endif; ?>
+
+            <!-- Booked Ambulances Section -->
+            <h2>Booked Ambulances</h2>
+            <?php if ($ambulance_result->num_rows > 0): ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vehicle Number</th>
+                            <th>Type</th>
+                            <th>Pickup Location</th>
+                            <th>Dropoff Location</th>
+                            <th>Booking Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($ambulance = $ambulance_result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo $ambulance['vehicle_number']; ?></td>
+                                <td><?php echo $ambulance['type']; ?></td>
+                                <td><?php echo $ambulance['pickup_location']; ?></td>
+                                <td><?php echo $ambulance['dropoff_location']; ?></td>
+                                <td><?php echo $ambulance['booking_time']; ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>No ambulances booked yet.</p>
             <?php endif; ?>
         </div>
     </div>

@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Execute the query and handle result
     if ($stmt->execute()) {
         echo "Appointment booked successfully!";
+        header("Location: patientPAnel.php");
     } else {
         echo "Error: " . $stmt->error;
     }

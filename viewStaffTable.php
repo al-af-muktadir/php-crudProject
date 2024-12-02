@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_staff'])) {
     $stmt->bind_param("sissss", $name, $hospital_id, $designation, $shift, $contact_number, $email);
 
     if ($stmt->execute()) {
-        header("Location: adminManageStaff.php?added=true");
+        header("Location: viewStaffTable.php");
         exit();
     } else {
         echo "Error adding staff: " . $conn->error;
@@ -31,7 +31,7 @@ if (isset($_GET['delete'])) {
     $stmt->bind_param("i", $staff_id);
 
     if ($stmt->execute()) {
-        header("Location: adminManageStaff.php?deleted=true");
+        header("Location: viewStaffTable.php");
         exit();
     } else {
         echo "Error deleting staff: " . $conn->error;
@@ -275,6 +275,7 @@ $staff_result = $conn->query($staff_query);
                 <?php endwhile; ?>
             </tbody>
         </table>
+        <a href="admin.php"><button class="btn">GO Back</button></a>
     </div>
 </body>
 </html>

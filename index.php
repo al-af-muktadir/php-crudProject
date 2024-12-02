@@ -1,3 +1,17 @@
+
+<?php
+// Include database connection (replace 'connect.php' with your connection file)
+include('connect.php');
+
+// Fetch all health tips from the database
+$query = "SELECT * FROM health_tips ORDER BY created_at DESC";
+$result = mysqli_query($conn, $query);
+
+// Check if there are any results
+if (!$result || mysqli_num_rows($result) == 0) {
+    echo "<p>No health tips available.</p>";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +31,44 @@ section {
     padding: 40px 20px;
     text-align: center;
 }
+.container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+    .hero {
+        background-image: url('hero.jpg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .hero h1 {
+        font-size: 3rem;
+    }
+    .card {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        transition: transform 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-10px);
+    }
+    .card h3 {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+    .card p {
+        color: #555;
+        font-size: 1rem;
+    }
 
 /* Hero Section */
 #hero {
@@ -148,8 +200,10 @@ footer ul li {
             
           </ul>
         </div>
-        <div class="navbar-end">
-          <a href="login.html" class="btn btn-primary">Log In</a>
+        <div class="navbar-end mx-4">
+          <a href="doctors_register.php" class="btn mx-4 btn-error">Doctor Register</a>
+          <a href="patientForm.php" class="btn btn-primary">Patient Register</a>
+          <a href="admin_register.php" class="btn mx-4 btn-secondary">Admin Register</a>
         </div>
       </div>
 
@@ -183,7 +237,7 @@ footer ul li {
       <p class="py-6">
         Caring for You, Every Step of the Way" At [Your Website Name], we are dedicated to offering you the best in healthcare. We combine advanced technology with compassionate care to provide services that help prevent, manage, and treat various health conditions. With a focus on patient-centered care, we work together with you to ensure your health is in good hands. Our team is here to support you at every stage of your health journey, providing expertise, guidance, and encouragement along the way
       </p>
-      <a href="login.html"><button class="btn btn-primary">Get Started</button></a>
+      <a href="PatientLogin.php"><button class="btn btn-primary">Get Started</button></a>
     </div>
   </div>
 </div>
@@ -198,7 +252,7 @@ footer ul li {
         <img src="doctor.jpeg" alt="">
           <h3 class='font-bold text-2xl text-black'>Consultations</h3>
           <p class='text-md text-black'>Book expert medical consultations for all specialties.</p>
-      <a href="login.html"><button class='btn btn-primary mt-12'>Book Now</button></a>
+      <a href="PatientLogin.php"><button class='btn btn-primary mt-12'>Book Now</button></a>
         </div>
       <div class="service-item">
         <img src="cross.jpeg" alt="">
@@ -214,6 +268,34 @@ footer ul li {
 </section>
 
 
+
+<div class="container">
+
+<!-- Hero Section -->
+<div class="container mt-5">
+        <h1 class="text-center mb-8 text-6xl font-bold">Health Tips</h1>
+        <div class="row">
+            <?php 
+            // Fetch and display each health tip
+            while ($row = mysqli_fetch_assoc($result)): ?>
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">
+                                <?php echo htmlspecialchars($row['title']); ?>
+                            </h5>
+                            <p class="card-text">
+                                <?php echo htmlspecialchars($row['description']); ?>
+                            </p>
+                            <p class="text-muted small">
+                                Created on: <?php echo date("F j, Y, g:i a", strtotime($row['created_at'])); ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        </div>
+    </div>
 
 
 
@@ -252,7 +334,7 @@ footer ul li {
 
 
 <!-- Contact Section -->
-<section id="contact">
+<section class="contact font-bold text-white text-3xl">
   <h2>Contact Us</h2>
   <p>Email: info@hospital.com</p>
   <p>Phone: +123-456-7890</p>

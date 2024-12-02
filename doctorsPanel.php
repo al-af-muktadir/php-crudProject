@@ -10,7 +10,7 @@ if (!isset($_SESSION['doctor_id'])) {
 
 $doctor_id = $_SESSION['doctor_id'];
 
-// Updated SQL query to join doctor, hospital, and department tables
+// Fetch doctor details
 $sql_doctor = "SELECT * FROM doctors WHERE doctor_id = '$doctor_id'";
 $result_doctor = $conn->query($sql_doctor);
 
@@ -22,25 +22,25 @@ if ($result_doctor->num_rows > 0) {
     $department_id = $doctor['department_id'];
 }
 
-// Fetch hospital name based on hospital_id
+// Fetch hospital name
 $sql_hospital = "SELECT name FROM hospitals WHERE hospital_id = '$hospital_id'";
 $result_hospital = $conn->query($sql_hospital);
-$hospital_name = "";
-if ($result_hospital->num_rows > 0) {
-    $hospital_row = $result_hospital->fetch_assoc();
-    $hospital_name = $hospital_row['name'];
-}
+$hospital_name = $result_hospital->num_rows > 0 ? $result_hospital->fetch_assoc()['name'] : "";
 
-// Fetch department name based on department_id
+// Fetch department name
 $sql_department = "SELECT name FROM departments WHERE dept_id = '$department_id'";
 $result_department = $conn->query($sql_department);
-$department_name = "";
-if ($result_department->num_rows > 0) {
-    $department_row = $result_department->fetch_assoc();
-    $department_name = $department_row['name'];
-}
+$department_name = $result_department->num_rows > 0 ? $result_department->fetch_assoc()['name'] : "";
 
-$conn->close();?>
+// Fetch appointments for the logged-in doctor
+$sql_appointments = "SELECT appointment_id, patient_name, patient_age, patient_gender, patient_email, 
+                            contact_number, appointment_date 
+                     FROM appointments 
+                     WHERE doctor_id = '$doctor_id'";
+$result_appointments = $conn->query($sql_appointments);
+
+$conn->close();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,202 +49,188 @@ $conn->close();?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor's Panel</title>
     <style>
-
-
-/* General Styles */
-body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
-}
-
-/* Navbar */
-.navbar {
-    background-color: #2c3e50;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 30px;
-    color: #ecf0f1;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.navbar .logo {
-    font-size: 24px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-}
-
-.navbar .logo:hover {
-    color: #3498db;
-}
-
-/* Header */
-.header {
-    background-color: #3498db;
-    color: white;
-    text-align: center;
-    padding: 20px 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.header h1 {
-    margin: 0;
-    font-size: 32px;
-    letter-spacing: 1px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-/* Sidebar and Main Section Styles */
-.container {
-    display: flex;
-    height: calc(100vh - 140px); /* Adjust for navbar + header height */
-}
-
-/* Sidebar */
-/* Sidebar */
-.sidebar {
-    width: 25%; /* Sidebar width */
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: calc(100vh - 120px); /* Full height minus navbar and header height */
-    position: fixed; /* Fix sidebar position */
-    top: 140px; /* Adjust for navbar + header combined height */
-    left: 0;
-    overflow-y: auto; /* Scrollable for overflow content */
-}
-
-/* Adjust main-section to account for fixed sidebar */
-.main-section {
-    margin-left: 25%; /* Push the main section to the right of the sidebar */
-    background-color: #ecf0f1;
-    padding: 20px;
-    overflow-y: auto;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
-    height: calc(100vh - 120px); /* Match the height of the sidebar */
-    margin-top: 120px; /* Push below the navbar and header */
-}
-
-.sidebar h2 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    text-align: center;
-    text-transform: uppercase;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 10px;
-}
-
-.sidebar p {
-    font-size: 16px;
-    margin-bottom: 10px;
-    line-height: 1.5;
-    padding: 8px 10px;
-    border: 1px solid #34495e;
-    border-radius: 5px;
-    background-color: #34495e;
-}
-
-/* Main Section */
-
-.main-section h1 {
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #2c3e50;
-    text-transform: uppercase;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 10px;
-}
-
-/* Table */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: white;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-table th, table td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #bdc3c7;
-}
-
-table th {
-    background-color: #3498db;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-table tr:hover {
-    background-color: #dff9fb;
-    cursor: pointer;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        text-align: center;
-        padding: 15px;
-    }
-
-    .main-section {
-        padding: 15px;
-    }
-
-    table th, table td {
-        padding: 8px;
-    }
-}
-
         /* General Styles */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
 
+        /* Navbar */
+        .navbar {
+            background-color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 30px;
+            color: #ecf0f1;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-wrap: nowrap;
+            height: calc(100vh - 60px); /* Subtract navbar height */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 25%; /* Sidebar width */
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            height: 100%; /* Full height */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .sidebar p {
+            font-size: 16px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .logout {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #e74c3c;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .logout:hover {
+            background-color: #c0392b;
+        }
+
+        /* Main Section */
+        .main-section {
+            flex: 1; /* Take the remaining space */
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #ecf0f1;
+        }
+
+        .main-section h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-transform: uppercase;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #bdc3c7;
+        }
+
+        table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #dff9fb;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-     <!-- Navbar -->
-     <nav class="navbar">
+    <!-- Navbar -->
+    <nav class="navbar">
         <div class="logo">Doctors Asylum</div>
     </nav>
 
-    <!-- Header -->
-    <header class="header">
-        <h1>Doctors Panel</h1>
-    </header>
-    <div class="sidebar">
-        <h2>Doctor Panel</h2>
-        <p><strong>Name:</strong> <?php echo $doctor_name; ?></p>
-        <p><strong>Email:</strong> <?php echo $doctor_email; ?></p>
-        <p><strong>Hospital:</strong> <?php echo $hospital_name; ?></p>
-        <p><strong>Department:</strong> <?php echo $department_name; ?></p>
-        <form  method="POST">
-            <a href="index.html"><button class="logout" type="submit" name="logout">Logout</button></a>
-        </form>
-    </div>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Doctor Panel</h2>
+            <p><strong>Name:</strong> <?php echo $doctor_name; ?></p>
+            <p><strong>Email:</strong> <?php echo $doctor_email; ?></p>
+            <p><strong>Hospital:</strong> <?php echo $hospital_name; ?></p>
+            <p><strong>Department:</strong> <?php echo $department_name; ?></p>
+            <a href="index.php" class="logout">Logout</a>
+        </div>
 
-    <div class="content">
-        <h1>Welcome, Dr. <?php echo $doctor_name; ?>!</h1>
-        <!-- Other doctor panel content can go here -->
+        <!-- Main Section -->
+        <div class="main-section">
+            <h1>Your Appointments</h1>
+            <!-- Appointments Table -->
+            <?php if ($result_appointments->num_rows > 0) { ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Appointment ID</th>
+                            <th>Patient Name</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>Appointment Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($appointment = $result_appointments->fetch_assoc()) { ?>
+                            <tr>
+                                <td><?php echo $appointment['appointment_id']; ?></td>
+                                <td><?php echo $appointment['patient_name']; ?></td>
+                                <td><?php echo $appointment['patient_age']; ?></td>
+                                <td><?php echo $appointment['patient_gender']; ?></td>
+                                <td><?php echo $appointment['patient_email']; ?></td>
+                                <td><?php echo $appointment['contact_number']; ?></td>
+                                <td><?php echo $appointment['appointment_date']; ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            <?php } else { ?>
+                <p>No appointments found.</p>
+            <?php } ?>
+        </div>
     </div>
 </body>
 </html>

@@ -146,6 +146,13 @@ if (isset($_GET['delete'])) {
         .btn-delete:hover {
             background-color: #c82333;
         }
+        .btn-goback{
+            position: relative;
+            left:150px;
+             padding:10px;
+             background-color: #28a745;
+             border-radius:10px;
+        }
     </style>
 </head>
 <body>
@@ -215,5 +222,6 @@ if (isset($_GET['delete'])) {
             </tbody>
         </table>
     </div>
+   <a href="admin.php"><button class="btn-goback">GO Back</button></a>
 </body>
 </html>

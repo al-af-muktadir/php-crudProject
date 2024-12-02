@@ -54,10 +54,12 @@ $doctor_result = $conn->query($query);
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#FFFAF1]">
-    <div class="navbar text-balck bg-sky-300 mb-12 shadow-lg">
-        <div class="flex-1">
-            <a class="btn text-balck btn-ghost text-xl  font-bold">Doctors Asylum</a>
-        </div>
+    <div class="navbar flex text-balck bg-sky-300 mb-12 shadow-lg justify-between">
+       
+           
+        <a class="text-balck bg-blue text-xl  font-bold">Doctors Asylum</a>
+        <a class="text-black font-bold" href="admin.php">Go Back</a>
+  
     </div>
 
     <div class="text-5xl  font-bold text-center text-gray-800 mb-12">

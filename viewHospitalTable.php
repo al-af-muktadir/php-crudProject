@@ -1,20 +1,7 @@
 <?php
 include 'connect.php';
 
-if (isset($_GET['delete'])) {
-    $hospital_id = intval($_GET['delete']); // Sanitize input
-    $delete_query = "DELETE FROM hospitals WHERE hospital_id = ?";
-    $delete_stmt = $conn->prepare($delete_query);
-    $delete_stmt->bind_param("i", $hospital_id);
 
-    if ($delete_stmt->execute()) {
-        // Redirect to the same page with a success message
-        header("Location: viewHospitalTable.php?deleted=true");
-        exit(); // Stop further script execution after redirection
-    } else {
-        echo "Error deleting hospital: " . $conn->error;
-    }
-}
 // Handle form submission to add a hospital
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hospital_name = $_POST['hospital_name'];
@@ -150,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <th>Location</th>
                     <th>Contact Number</th>
                     <th>Email</th>
-                    <th>Actions</th>
+                   
                 </tr>
             </thead>
             <tbody>
@@ -164,16 +151,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td><?php echo $row['location']; ?></td>
                         <td><?php echo $row['contact']; ?></td>
                         <td><?php echo $row['email']; ?></td>
-                        <td>
-                        <a href="?delete=<?php echo $row['hospital_id']; ?>" class="btn-delete" 
-                        onclick="return confirm('Are you sure you want to delete this hospital?')">Delete</a>
-</td>
+                    
 
                     </tr>
                 <?php endwhile; ?>
             </tbody>
         </table>
     </div>
-    <a href="admin.html"><button class="btn">GO BACK</button></a>
+   
+    <a href="admin.php"><button class="btn">GO BACK</button></a>
+<a href="admin.html"><button class="btn">GO back</button></a>
 </body>
+
 </html>

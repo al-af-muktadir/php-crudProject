@@ -91,7 +91,7 @@ $result = $conn->query($query);
     <nav class="navbar">
         <a href="adminDashboard.php" class="logo">Admin Panel</a>
         <div class="navbar-links">
-            <a href="admin.html" class="nav-link">go back</a>
+            <a href="admin.php" class="nav-link">go back</a>
         </div>
     </nav>
 

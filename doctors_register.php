@@ -1,11 +1,12 @@
 <?php
 session_start();
 include('connect.php');
+
 if (isset($_POST['submit'])) {
     // Collect form data
     $doctor_name = $_POST['name'];
     $email = $_POST['email'];
-    $password = $_POST['password']; // The plain text password
+    $password = $_POST['password']; // Save securely using hashing (bcrypt recommended)
     $hospital_name = $_POST['hospital_name'];
     $department_name = $_POST['dept_name'];
     $experience = $_POST['experience'];
@@ -20,7 +21,7 @@ if (isset($_POST['submit'])) {
         if ($conn->query($insert_hospital)) {
             $hospital_id = $conn->insert_id; // Get the inserted hospital's ID
         } else {
-            $error_message = "Error inserting hospital!";
+            die("Error inserting hospital: " . $conn->error);
         }
     } else {
         // Get the existing hospital ID
@@ -38,7 +39,7 @@ if (isset($_POST['submit'])) {
         if ($conn->query($insert_department)) {
             $dept_id = $conn->insert_id; // Get the inserted department's ID
         } else {
-            $error_message = "Error inserting department!";
+            die("Error inserting department: " . $conn->error);
         }
     } else {
         // Get the existing department ID
@@ -47,28 +48,28 @@ if (isset($_POST['submit'])) {
     }
 
     // Insert doctor into the doctors table
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT); // Use bcrypt for password security
     $insert_doctor = "INSERT INTO doctors (name, email, password, hospital_id, department_id, experience) 
-                      VALUES ('$doctor_name', '$email', '$password', '$hospital_id', '$dept_id', '$experience')";
+                      VALUES ('$doctor_name', '$email', '$hashed_password', '$hospital_id', '$dept_id', '$experience')";
     if ($conn->query($insert_doctor)) {
         // Get the inserted doctor ID
         $doctor_id = $conn->insert_id;
 
-        // Insert doctor_id into the department table
-        $update_department = "UPDATE departments SET doctor_id = '$doctor_id' WHERE dept_id = '$dept_id'";
-        if ($conn->query($update_department)) {
-            header("Location: doctorsPanel.php"); // Redirect to the doctor panel
-            exit();
-        } else {
-            $error_message = "Error linking doctor to department!";
-        }
+        // Store doctor ID in session for displaying later
+        $_SESSION['doctor_id'] = $doctor_id;
+
+        // Redirect to the doctor information page
+        header("Location: doctorsPanel.php");
+        exit();
     } else {
-        $error_message = "Error inserting doctor!";
+        die("Error inserting doctor: " . $conn->error);
     }
 }
 
 // Close the database connection
 $conn->close();
 ?>
+
 
 
 <!DOCTYPE html>
@@ -79,13 +80,13 @@ $conn->close();
     <title>Doctor Registration</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
+     .registration-form {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  position: relative;
+  left:600px;
+  margin-top:20px;
+   
 }
 
 .registration-form {
@@ -127,10 +128,60 @@ $conn->close();
 .registration-form button:hover {
     background-color: #45a049;
 }
+.navbar {
+    background-color: red; /* Blue gradient background */
+    padding: 15px 20px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+.navbar-links {
+    list-style-type: none;
+    display: flex;
+}
+
+.navbar-links li {
+    margin-left: 20px;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #fff;
+    padding: 5px 10px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.navbar-links a:hover {
+    background-color: #00f2fe;
+    color: #333;
+    border-radius: 4px;
+}
     </style>
 </head>
 <body>
+<nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.php" class="logo">Doctors Asylum</a>
+        </div>
+    </nav>
     <div class="registration-form">
         <h2>Doctor Registration</h2>
         <form  method="POST">
@@ -152,6 +203,7 @@ $conn->close();
             <input type="text" name="experience" id="dept_name" required><br>
             <button type="submit" name="submit">Register</button>
         </form>
+        <p>Already Have an account ? <a href="doctorsLogin.php">login</a></p>
     </div>
 </body>
 </html>

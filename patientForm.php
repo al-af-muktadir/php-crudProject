@@ -12,13 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $contact = $_POST['contact'];
 
     // Hash password for security
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+   
 
     // Insert data into patienttable
     $query = "INSERT INTO patients (name, email, password, gender, age, contact) 
               VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ssssss", $name, $email, $hashed_password, $gender, $age, $contact);
+    $stmt->bind_param("ssssss", $name, $email, $password, $gender, $age, $contact);
 
     if ($stmt->execute()) {
         // Set session for the patient
@@ -194,7 +194,7 @@ body {
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="home.php" class="logo">Doctors Asylum</a>
+            <a href="index.php" class="logo">Doctors Asylum</a>
         </div>
     </nav>
 
@@ -226,6 +226,7 @@ body {
 
             <input type="submit" value="Register">
         </form>
+        <p>Already Have an account ? <a href="PatientLogin.php">login</a></p>
     </div>
 </body>
 </html>

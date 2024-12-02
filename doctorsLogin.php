@@ -49,16 +49,54 @@ $conn->close();
     padding: 0;
     box-sizing: border-box;
 }
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+.navbar {
+    background-color: red; /* Blue gradient background */
+    padding: 15px 20px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+.navbar-links {
+    list-style-type: none;
+    display: flex;
+}
+
+.navbar-links li {
+    margin-left: 20px;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #fff;
+    padding: 5px 10px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.navbar-links a:hover {
+    background-color: #00f2fe;
+    color: #333;
+    border-radius: 4px;
+}
+
+
 
 .login-container {
     background-color: white;
@@ -66,6 +104,14 @@ body {
     border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     width: 300px;
+}
+.login-container {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  position: relative;
+  left:600px;
+  margin-top:50px;
+   
 }
 
 h2 {
@@ -117,6 +163,11 @@ button[type="submit"]:hover {
     </style>
 </head>
 <body>
+<nav class="navbar">
+        <div class="navbar-container">
+            <a href="home.php" class="logo">Doctors Asylum</a>
+        </div>
+    </nav>
     <div class="login-container">
         <h2>Doctor Login</h2>
         <form method="POST">
@@ -135,6 +186,8 @@ button[type="submit"]:hover {
 
             <button type="submit" name="login">Login</button>
         </form>
+
+        <p>Dont have an account? <a href="doctors_register.php">Regsiter</a></p>
     </div>
 </body>
 </html>

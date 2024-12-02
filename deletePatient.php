@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
 
     if ($delete_stmt->execute()) {
         echo "Patient deleted successfully.";
-        header("Location: adminManagePatients.php");  // Redirect back to the manage patients page
+        header("Location:viewPatientTable.php");  // Redirect back to the manage patients page
     } else {
         echo "Error deleting data: " . $delete_stmt->error;
     }
